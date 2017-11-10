@@ -8,13 +8,13 @@
 
 namespace Lhlog\Storage;
 
-use Lhlog\IBase\IStorage;
+use Lhlog\Models\MysqlLog;
 
-class MysqlStorage implements IStorage
+class MysqlStorage extends Base
 {
     use \Lhlog\Traits\Base;
 
-    public $host = '127.0.0.1';
+    public $host     = '127.0.0.1';
 
     public $userName = 'root';
 
@@ -26,14 +26,10 @@ class MysqlStorage implements IStorage
 
     public $charset = 'utf8';
 
-    public static $conn;
+    protected static $conn;
 
     public $logLevel;
 
-    public function __construct($config = array())
-    {
-        $this->init($config);
-    }
 
     /**
      * @desc
@@ -48,14 +44,14 @@ class MysqlStorage implements IStorage
      */
     public function process($level, $trace, $message, $context)
     {
-        // TODO: Implement process() method.
         $this->logLevel = $level;
-        $logs = [
-            $level,
-            !empty($trace) ? "file[{$trace['file']}]" . " line[{$trace['line']}]" : "",
+        $logs = new MysqlLog(
             $message,
+            $level,
             !empty($context) ? json_encode($context) : "",
-        ];
+            !empty($trace) ? "file[{$trace['file']}]" . " line[{$trace['line']}]" : "",
+            date('Y-m-d H:i:s')
+        );
         $this->write($logs);
     }
 
@@ -69,8 +65,7 @@ class MysqlStorage implements IStorage
      */
     public function init(Array $config)
     {
-        // TODO: Implement init() method.
-        $this->initProperty($config);
+        parent::init($config);
         $dsn = "mysql:dbname={$this->dbName};host={$this->host};charset={$this->charset}";
         try {
             if (empty(self::$conn)) {
@@ -92,13 +87,8 @@ class MysqlStorage implements IStorage
      */
     public function write($logs)
     {
-        // TODO: Implement write() method.
-        $pdo = self::$conn->prepare("
-          INSERT INTO {$this->logTableName} (level, location, message, content, create_time) 
-          VALUES (?,?,?,?, now());
-        ");
-        //@todo 这个时间可以 用户定义的吗
-        $pdo->execute($logs);
+        $pdo = self::$conn->prepare($logs->getFormatSql());
+        $pdo->execute($logs->getFormatData());
         return self::$conn->lastInsertId();
     }
 

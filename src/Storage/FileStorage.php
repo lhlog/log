@@ -17,29 +17,29 @@ class FileStorage extends Base
      * 日志文件的周期
      */
     // 月 2017-11-21-14
-    const CYCLE_HOUR = 'hour';
+    const CYCLE_HOUR  = 'hour';
     // 天 017-11-21-xxx.log
-    const CYCLE_DAY = 'day';
+    const CYCLE_DAY   = 'day';
     // 月 2017-11
     const CYCLE_MONTH = 'month';
     // 年 2017
-    const CYCLE_YEAR = 'year';
+    const CYCLE_YEAR  = 'year';
 
     // 日志名
     public $logFileName = 'lhlog.log';
     // 保存的目录
-    public $logPath = '.' ;
+    public $logPath     = '.' ;
     // 级别
     public $logLevel;
     // 周期
-    public $cycle = self::CYCLE_DAY;
+    public $cycle       = self::CYCLE_DAY;
 
     // 周期类型
     const CYCLE_TYPE_MAP = [
-        self::CYCLE_HOUR => 'Y-m-d-H',
-        self::CYCLE_DAY => 'Y-m-d',
+        self::CYCLE_HOUR  => 'Y-m-d-H',
+        self::CYCLE_DAY   => 'Y-m-d',
         self::CYCLE_MONTH => 'Y-m',
-        self::CYCLE_YEAR => 'Y',
+        self::CYCLE_YEAR  => 'Y',
     ];
 
     /**
@@ -51,7 +51,7 @@ class FileStorage extends Base
      */
     public function init(array $config)
     {
-        parent::init( $config );
+        parent::init($config);
         if (!array_key_exists( $this->cycle, self::CYCLE_TYPE_MAP )) throw new InvalidArgumentException('Invalid `cycle` value '.$this->cycle);
 
         // 全路径
