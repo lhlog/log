@@ -25,11 +25,11 @@ class LoggerTest extends TestCase
     public function testConfigLogger()
     {
         $config = [
-            'path'    => './test.log',
+            'path'    => __DIR__.'/test.log',
         ];
 
-        $logger = new Logger();
-        $logger->setDefaultStorage(new FileStorage($config));
+        $logger = new Logger( new FileStorage($config) );
+        // $r = new Logger( new RedisStorage($config) );
         $logger->info("hedonghong", ['sss'=>111]);
     }
 }

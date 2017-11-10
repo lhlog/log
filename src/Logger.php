@@ -9,6 +9,7 @@
 namespace Lhlog;
 
 use Lhlog\IBase\IStorage;
+use Lhlog\Storage\FileStorage;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -16,18 +17,9 @@ class Logger implements LoggerInterface
 {
     protected $storage;
 
-    public function __construct()
+    public function __construct( IStorage $storage = null )
     {
-    }
-
-    public function setDefaultStorage(IStorage $storage)
-    {
-        $this->storage = $storage;
-    }
-
-    private function getDefaultStorage()
-    {
-        $this->storage = new \Lhlog\Storage\FileStorage();
+        $this->storage = null === $storage ? new FileStorage : $storage;
     }
 
     /**
@@ -163,10 +155,13 @@ class Logger implements LoggerInterface
     public function log($level, $message, array $context = array())
     {
         // TODO: Implement log() method.
-        if (!$this->storage) {
-            $this->getDefaultStorage();
-        }
         $this->storage->process($level, $message, $context);
+        $this->aa();
+    }
+    
+    public function aa(){
+        file_put_contents( __DIR__.'/../tests/trace.log', print_r( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true ) );
+
     }
 
 }
