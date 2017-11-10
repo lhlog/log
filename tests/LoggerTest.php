@@ -25,11 +25,13 @@ class LoggerTest extends TestCase
     public function testConfigLogger()
     {
         $config = [
-            'path'    => './',
-            'logName' => 'test.log',
-            'cycle'   => 'hour', #hour 2017-11-21-14 #day 2017-11-21-xxx.log  #month 2017-11 #year 2017
+            'logPath'    => '.',
+            'logFileName' => 'test.log',
+            'cycle'   => FileStorage::CYCLE_DAY, #hour 2017-11-21-14 #day 2017-11-21-xxx.log  #month 2017-11 #year 2017
         ];
         $logger = new Logger(new FileStorage($config));
         $logger->info("hedonghong", ['sss'=>111]);
     }
 }
+
+( new LoggerTest )->testConfigLogger();

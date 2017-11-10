@@ -13,16 +13,57 @@ use Lhlog\IBase\IStorage;
 
 class FileStorage implements IStorage
 {
-    public $logFileName;
+    use \Lhlog\Traits\Base;
 
-    public $logPath;
+    /**
+     * 日志文件的周期
+     */
+    // 月 2017-11-21-14
+    const CYCLE_HOUR = 'hour';
+    // 天 017-11-21-xxx.log
+    const CYCLE_DAY = 'day';
+    // 月 2017-11
+    const CYCLE_MONTH = 'month';
+    // 年 2017
+    const CYCLE_YEAR = 'year';
 
+    // 日志名
+    public $logFileName = 'lhlog.log';
+    // 保存的目录
+    public $logPath = '.' ;
+    // 级别
     public $logLevel;
+    // 周期
+    public $cycle = self::CYCLE_DAY;
+
+    // 周期类型
+    const CYCLE_TYPE_MAP = [
+        self::CYCLE_HOUR => 'Y-m-d-H',
+        self::CYCLE_DAY => 'Y-m-d',
+        self::CYCLE_MONTH => 'Y-m',
+        self::CYCLE_YEAR => 'Y',
+    ];
 
     public function __construct($config = array())
     {
         $this->init($config);
     }
+
+    /**
+     * @desc
+     * @return mixed
+     * @author hedonghong
+     * @gts
+     * @link
+     */
+    public function init(array $config)
+    {
+        $this->initProperty( $config );
+        if( !array_key_exists( $this->cycle, self::CYCLE_TYPE_MAP ) ) throw new \Exception( 'Invalid `cycle` value '.$this->cycle );
+        // 全路径
+        $this->logPath = $this->logPath.'/'.date( self::CYCLE_TYPE_MAP[ $this->cycle ] ).'_'.$this->logFileName;
+    }
+
     /**
      * @desc
      * @return mixed
@@ -32,6 +73,7 @@ class FileStorage implements IStorage
      */
     public function process($level, $trace, $message, $context=array())
     {
+        $this->logLevel = $level;
         // TODO: Implement process() method.
         $t    = \DateTime::createFromFormat("U.u", microtime(true))->format('Y-m-d H:i:s.u');
         $log  = "[{$t}] - [{$level}]";
@@ -40,37 +82,6 @@ class FileStorage implements IStorage
         !empty($context) ? $log .= " " . json_encode($context) : "";
         $log .= PHP_EOL.PHP_EOL;
         $this->write($log);
-    }
-
-    /**
-     * @desc
-     * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
-     */
-    public function init(Array $config)
-    {
-        // TODO: Implement init() method.
-        $this->logPath     = (empty($config['path']) ? '.'.DIRECTORY_SEPARATOR : $config['path'].DIRECTORY_SEPARATOR);
-        switch ($config['cycle']) {
-            case 'hour':
-                $this->logPath .= date('Y-m-d-H')."_";
-                break;
-            case 'day':
-                $this->logPath .= date('Y-m-d')."_";
-                break;
-            case 'month':
-                $this->logPath .= date('Y-m')."_";
-                break;
-            case 'year':
-                $this->logPath .= date('Y')."_";
-                break;
-            default:
-                break;
-        }
-        $this->logPath    .= (empty($config['logName']) ? 'lhlog.log' : $config['logName']);
-        $this->logFileName = basename($this->logPath);
     }
 
     /**
