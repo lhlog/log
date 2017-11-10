@@ -15,7 +15,7 @@ class MysqlLog extends Log
         parent::__construct($message, $location, $level, $content, $createTime);
     }
 
-    public function getFormatSql($logTableName)
+    public function getWriteSql($logTableName)
     {
         return
         "
@@ -25,7 +25,7 @@ class MysqlLog extends Log
         ";
     }
 
-    public function getFormatData()
+    public function getWriteData()
     {
         return [
             ":level"       => $this->level,
@@ -33,5 +33,17 @@ class MysqlLog extends Log
             ":content"     => $this->content,
             ":create_time" => $this->create_time,
         ];
+    }
+
+    public static function getReadSql($logTableName, $level='', $order, $page, $size)
+    {
+        $offset = ($page - 1) * $size;
+        $where  = " 1 = 1";
+        if (!empty($level)) {
+            $level  = addslashes($level);
+            $where .= " AND `level`='{$level}'";
+        }
+        $where .= " {$order} {$offset}, {$size}";
+        return "SELECT * FROM {$logTableName} WHERE" . $where;
     }
 }

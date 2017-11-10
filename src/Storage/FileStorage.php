@@ -10,6 +10,7 @@ namespace Lhlog\Storage;
 
 use Lhlog\Models\LineLog;
 use Psr\Log\InvalidArgumentException;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 
 class FileStorage extends Base
 {
@@ -101,9 +102,45 @@ class FileStorage extends Base
      * @gts
      * @link
      */
-    public function read()
+    public function read($level=null, $order=1, $page=1, $size=100)
     {
-        // TODO: Implement read() method.
+        $logs  = [];
+        if (file_exists($this->logPath)) {
+            $fp = new \SplFileObject($this->logPath, "rb");
+            $fp->seek(PHP_INT_MAX);
+            $totalLine          = $fp->key()+1;
+            $totalPage          = ceil($totalLine/$size);
+//            $logs['total_line'] = $totalLine;
+//            $logs['order']      = $order;
+//            $logs['page']       = $page;
+//            $logs['size']       = $size;
+            if ($order === 1) {
+                if ($totalPage >= $page) {
+                    $startLine = ($page - 1) * $size;
+                    $endLine   = $page * $size;
+                    $endLine   = $endLine > $totalLine ? $totalLine : $endLine;
+                    $count     = $endLine - $startLine;
+                    $fp->seek($startLine);
+                    for ($i = 0; $i < $count; ++$i) {
+                        $logs[] = $fp->current();
+                        $fp->next();
+                    }
+                }
+            } elseif ($order === -1) {
+                if ($totalPage >= $page) {
+                    $startLine = $totalLine - ($page * $size) + 1;
+                    $startLine = $startLine < 0 ? 0 : $startLine;
+                    $count     = $size;
+                    $fp->seek($startLine);
+                    for ($i = 0; $i < $count; ++$i) {
+                        $logs[] = $fp->current();
+                        $fp->next();
+                    }
+                    $logs = array_reverse($logs);
+                }
+            }
+        }
+        return $logs;
     }
 
     /**

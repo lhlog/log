@@ -87,8 +87,8 @@ class MysqlStorage extends Base
      */
     public function write($logs)
     {
-        $pdo = self::$conn->prepare($logs->getFormatSql());
-        $pdo->execute($logs->getFormatData());
+        $pdo = self::$conn->prepare($logs->getWriteSql());
+        $pdo->execute($logs->getWriteData());
         return self::$conn->lastInsertId();
     }
 
@@ -99,9 +99,11 @@ class MysqlStorage extends Base
      * @gts
      * @link
      */
-    public function read()
+    public function read($level='', $order='', $page=1, $size=100)
     {
-        // TODO: Implement read() method.
+        $sql     = MysqlLog::getReadSql($this->logTableName, $level, $order, $page, $size);
+        $results = self::$conn->query($sql);
+        return $results;
     }
 
     /**

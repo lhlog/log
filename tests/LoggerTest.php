@@ -52,6 +52,17 @@ class LoggerTest extends TestCase
 //
 //        $mysql->info("hedonghong", ['ss'=>111]);
     }
+
+    public function testRead()
+    {
+        $config = [
+            'logPath'    => '.',
+            'logFileName' => 'test.log',
+            'cycle'   => FileStorage::CYCLE_DAY,
+        ];
+        $logger = new Logger(new FileStorage($config));
+        $logger->listLogs(1, 1, 3, 3);
+    }
 }
 
-( new LoggerTest )->testConfigLogger();
+( new LoggerTest )->testRead();

@@ -20,7 +20,7 @@ interface IStorage
     public function write($log);
 
     //读取方法
-    public function read();
+    public function read($level, $order='', $page=1, $size=100);
 
     //收尾工作
     public function close();

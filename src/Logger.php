@@ -22,6 +22,11 @@ class Logger implements LoggerInterface
         $this->storage = (null === $storage) ? new FileStorage() : $storage;
     }
 
+    public function listLogs($level, $order, $page=1, $size=100)
+    {
+        print_r($this->storage->read($level, $order, $page, $size));
+    }
+
     /**
      * @desc
      * @param string $message
