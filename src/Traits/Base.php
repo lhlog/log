@@ -1,6 +1,6 @@
 <?php
 namespace Lhlog\Traits;
-trait Base{
+trait Base {
     /**
      * 根据传入的参数来初始化属性
      * @author luoyuxiong

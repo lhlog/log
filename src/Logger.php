@@ -11,6 +11,7 @@ namespace Lhlog;
 use Lhlog\IBase\IStorage;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use \Lhlog\Storage\FileStorage;
 
 class Logger implements LoggerInterface
 {
@@ -18,7 +19,7 @@ class Logger implements LoggerInterface
 
     public function __construct(IStorage $storage = null)
     {
-        $this->storage = (null === $storage) ? new \Lhlog\Storage\FileStorage() : $storage;
+        $this->storage = (null === $storage) ? new FileStorage() : $storage;
     }
 
     /**
