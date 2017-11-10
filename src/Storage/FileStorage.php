@@ -7,8 +7,8 @@
  */
 
 namespace Lhlog\Storage;
-
 class FileStorage extends Base
+
 {
     /**
      * 日志文件的周期
@@ -50,6 +50,7 @@ class FileStorage extends Base
     {
         parent::init( $config );
         if( !array_key_exists( $this->cycle, self::CYCLE_TYPE_MAP ) ) throw new \Exception( 'Invalid `cycle` value '.$this->cycle );
+
         // 全路径
         $this->logPath = $this->logPath.'/'.date( self::CYCLE_TYPE_MAP[ $this->cycle ] ).'_'.$this->logFileName;
     }

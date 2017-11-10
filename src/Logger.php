@@ -9,7 +9,6 @@
 namespace Lhlog;
 
 use Lhlog\IBase\IStorage;
-use Lhlog\Storage\FileStorage;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
