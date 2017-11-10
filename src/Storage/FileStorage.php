@@ -52,7 +52,24 @@ class FileStorage implements IStorage
     public function init(Array $config)
     {
         // TODO: Implement init() method.
-        $this->logPath     = empty($config['path']) ? './lhlog.log' : $config['path'];
+        $this->logPath     = (empty($config['path']) ? '.'.DIRECTORY_SEPARATOR : $config['path'].DIRECTORY_SEPARATOR);
+        switch ($config['cycle']) {
+            case 'hour':
+                $this->logPath .= date('Y-m-d-H')."_";
+                break;
+            case 'day':
+                $this->logPath .= date('Y-m-d')."_";
+                break;
+            case 'month':
+                $this->logPath .= date('Y-m')."_";
+                break;
+            case 'year':
+                $this->logPath .= date('Y')."_";
+                break;
+            default:
+                break;
+        }
+        $this->logPath    .= (empty($config['logName']) ? 'lhlog.log' : $config['logName']);
         $this->logFileName = basename($this->logPath);
     }
 

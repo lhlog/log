@@ -16,21 +16,21 @@ use Lhlog\Logger;
 
 class LoggerTest extends TestCase
 {
-    public function testLogger()
-    {
-        $logger = new Logger();
-        $logger->debug("hedonghong", ['sss'=>111]);
-    }
-
-//    public function testConfigLogger()
+//    public function testLogger()
 //    {
-//        $config = [
-//            'storage' => 'file',
-//            'path'    => './test.log',
-//        ];
-//
 //        $logger = new Logger();
-//        $logger->setDefaultStorage(new FileStorage($config));
-//        $logger->info("hedonghong", ['sss'=>111]);
+//        $logger->debug("hedonghong", ['sss'=>111]);
 //    }
+
+    public function testConfigLogger()
+    {
+        $config = [
+            'path'    => './',
+            'logName' => 'test.log',
+            'cycle'   => 'hour', #hour 2017-11-21-14 #day 2017-11-21-xxx.log  #month 2017-11 #year 2017
+        ];
+
+        $logger = new Logger(new FileStorage($config));
+        $logger->info("hedonghong", ['sss'=>111]);
+    }
 }
