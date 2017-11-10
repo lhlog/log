@@ -1,0 +1,38 @@
+{
+    "name": "lhlog/lhlog",
+    "description": "This is a logging plug-in",
+	"keywords": ["xxx"],
+    "type": "log-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "hedonghong",
+            "email": "782101031@qq.com"
+        },
+		{
+            "name": "luoyuxiong",
+            "email": "971366114@qq.com"
+        }
+    ],
+	"autoload": {
+		"psr-4": {
+			"Lhlog\\":"src/",
+			"Test\\":"tests/"
+		}
+	},
+    "minimum-stability": "stable",
+    "require": {
+		"php": "~5.6",
+        "predis/predis": "^1.1",
+		"psr/log": "^1.0.2"
+	},
+	"repositories": {
+		"packagist": {
+			"type": "composer",
+			"url": "https://packagist.phpcomposer.com"
+		}
+	},
+    "require-dev": {
+        "phpunit/phpunit": "5.7"
+    }
+}
