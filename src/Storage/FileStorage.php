@@ -10,6 +10,7 @@ namespace Lhlog\Storage;
 
 
 use Lhlog\IBase\IStorage;
+use Psr\Log\InvalidArgumentException;
 
 class FileStorage implements IStorage
 {
@@ -59,7 +60,7 @@ class FileStorage implements IStorage
     public function init(array $config)
     {
         $this->initProperty( $config );
-        if( !array_key_exists( $this->cycle, self::CYCLE_TYPE_MAP ) ) throw new \Exception( 'Invalid `cycle` value '.$this->cycle );
+        if( !array_key_exists( $this->cycle, self::CYCLE_TYPE_MAP ) ) throw new InvalidArgumentException( 'Invalid `cycle` value '.$this->cycle );
         // 全路径
         $this->logPath = $this->logPath.'/'.date( self::CYCLE_TYPE_MAP[ $this->cycle ] ).'_'.$this->logFileName;
     }
