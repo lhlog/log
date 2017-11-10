@@ -30,11 +30,12 @@ class FileStorage implements IStorage
      * @gts
      * @link
      */
-    public function process($level, $message, $context=array())
+    public function process($level, $trace, $message, $context=array())
     {
         // TODO: Implement process() method.
         $t    = \DateTime::createFromFormat("U.u", microtime(true))->format('Y-m-d H:i:s.u');
         $log  = "[{$t}] - [{$level}]";
+        !empty($trace) ? $log .= " file[{$trace['file']}]" . " line[{$trace['line']}]" : "";
         $log .= "  {$message}";
         !empty($context) ? $log .= " " . json_encode($context) : "";
         $log .= PHP_EOL.PHP_EOL;

@@ -19,17 +19,18 @@ class LoggerTest extends TestCase
     public function testLogger()
     {
         $logger = new Logger();
-        $logger->info("hedonghong", ['sss'=>111]);
+        $logger->debug("hedonghong", ['sss'=>111]);
     }
 
-    public function testConfigLogger()
-    {
-        $config = [
-            'path'    => './test.log',
-        ];
-
-        $logger = new Logger();
-        $logger->setDefaultStorage(new FileStorage($config));
-        $logger->info("hedonghong", ['sss'=>111]);
-    }
+//    public function testConfigLogger()
+//    {
+//        $config = [
+//            'storage' => 'file',
+//            'path'    => './test.log',
+//        ];
+//
+//        $logger = new Logger();
+//        $logger->setDefaultStorage(new FileStorage($config));
+//        $logger->info("hedonghong", ['sss'=>111]);
+//    }
 }

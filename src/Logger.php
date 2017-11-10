@@ -15,19 +15,9 @@ use Psr\Log\LogLevel;
 class Logger implements LoggerInterface
 {
     protected $storage;
-
-    public function __construct()
+    public function __construct(IStorage $storage = null)
     {
-    }
-
-    public function setDefaultStorage(IStorage $storage)
-    {
-        $this->storage = $storage;
-    }
-
-    private function getDefaultStorage()
-    {
-        $this->storage = new \Lhlog\Storage\FileStorage();
+        $this->storage = (null === $storage) ? new \Lhlog\Storage\FileStorage() : $storage;
     }
 
     /**
@@ -162,11 +152,8 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        // TODO: Implement log() method.
-        if (!$this->storage) {
-            $this->getDefaultStorage();
-        }
-        $this->storage->process($level, $message, $context);
+        $trace = debug_backtrace (DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $trace = !empty($trace) ? $trace[1] : [];
+        $this->storage->process($level, $trace, $message, $context);
     }
-
 }
