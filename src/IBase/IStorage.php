@@ -11,7 +11,7 @@ namespace Lhlog\IBase;
 interface IStorage
 {
     //调度方法
-    public function process($level, $message, $context);
+    public function process($level, $trace, $message, $context);
 
     //初始化方法
     public function init(Array $config);

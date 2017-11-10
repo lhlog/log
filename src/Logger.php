@@ -17,9 +17,9 @@ class Logger implements LoggerInterface
 {
     protected $storage;
 
-    public function __construct( IStorage $storage = null )
+    public function __construct(IStorage $storage = null)
     {
-        $this->storage = null === $storage ? new FileStorage : $storage;
+        $this->storage = (null === $storage) ? new \Lhlog\Storage\FileStorage() : $storage;
     }
 
     /**
@@ -154,14 +154,8 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        // TODO: Implement log() method.
-        $this->storage->process($level, $message, $context);
-        $this->aa();
+        $trace = debug_backtrace (DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $trace = !empty($trace) ? $trace[1] : [];
+        $this->storage->process($level, $trace, $message, $context);
     }
-    
-    public function aa(){
-        file_put_contents( __DIR__.'/../tests/trace.log', print_r( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true ) );
-
-    }
-
 }
