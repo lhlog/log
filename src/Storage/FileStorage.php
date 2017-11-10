@@ -8,13 +8,8 @@
 
 namespace Lhlog\Storage;
 
-
-use Lhlog\IBase\IStorage;
-
-class FileStorage implements IStorage
+class FileStorage extends Base
 {
-    use \Lhlog\Traits\Base;
-
     /**
      * 日志文件的周期
      */
@@ -44,11 +39,6 @@ class FileStorage implements IStorage
         self::CYCLE_YEAR => 'Y',
     ];
 
-    public function __construct($config = array())
-    {
-        $this->init($config);
-    }
-
     /**
      * @desc
      * @return mixed
@@ -58,7 +48,7 @@ class FileStorage implements IStorage
      */
     public function init(array $config)
     {
-        $this->initProperty( $config );
+        parent::init( $config );
         if( !array_key_exists( $this->cycle, self::CYCLE_TYPE_MAP ) ) throw new \Exception( 'Invalid `cycle` value '.$this->cycle );
         // 全路径
         $this->logPath = $this->logPath.'/'.date( self::CYCLE_TYPE_MAP[ $this->cycle ] ).'_'.$this->logFileName;
@@ -76,11 +66,13 @@ class FileStorage implements IStorage
         $this->logLevel = $level;
         // TODO: Implement process() method.
         $t    = \DateTime::createFromFormat("U.u", microtime(true))->format('Y-m-d H:i:s.u');
-        $log  = "[{$t}] - [{$level}]";
-        !empty($trace) ? $log .= " file[{$trace['file']}]" . " line[{$trace['line']}]" : "";
-        $log .= "  {$message}";
-        !empty($context) ? $log .= " " . json_encode($context) : "";
-        $log .= PHP_EOL.PHP_EOL;
+        $log = new \Lhlog\Models\Log(
+            $t. '  ' .$message,
+            empty($trace) ? "" : " file[{$trace['file']}]  line[{$trace['line']}]",
+            $level,
+            $context
+        );
+
         $this->write($log);
     }
 
@@ -94,7 +86,7 @@ class FileStorage implements IStorage
     public function write($log)
     {
         // TODO: Implement write() method.
-        return file_put_contents($this->logPath, $log, FILE_APPEND);
+        return file_put_contents($this->logPath, json_encode( $log ), FILE_APPEND);
     }
 
     /**

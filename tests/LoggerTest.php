@@ -22,8 +22,20 @@ class LoggerTest extends TestCase
 //        $logger->debug("hedonghong", ['sss'=>111]);
 //    }
 
+
+
     public function testConfigLogger()
     {
+
+        /*$client = new \Predis\Client([
+            'scheme' => 'tcp',
+            'host'   => '127.0.0.1',
+            'port'   => 6379,
+        ]);
+        $client->set( 'name', 'puppy' );
+        var_dump( $client );*/
+
+
         $config = [
             'logPath'    => '.',
             'logFileName' => 'test.log',
