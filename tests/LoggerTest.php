@@ -24,16 +24,16 @@ class LoggerTest extends TestCase
 //    }
 
 
-//    public function testConfigLogger()
-//    {
-//        $config = [
-//            'logPath'    => '.',
-//            'logFileName' => 'test.log',
-//            'cycle'   => FileStorage::CYCLE_DAY, #hour 2017-11-21-14 #day 2017-11-21-xxx.log  #month 2017-11 #year 2017
-//        ];
-//        $logger = new Logger(new FileStorage($config));
-//        $logger->info("hedonghong", ['sss'=>111]);
-//    }
+    public function testConfigLogger()
+    {
+        $config = [
+            'logPath'    => '.',
+            'logFileName' => 'test.log',
+            'cycle'   => FileStorage::CYCLE_DAY, #hour 2017-11-21-14 #day 2017-11-21-xxx.log  #month 2017-11 #year 2017
+        ];
+        $logger = new Logger(new FileStorage($config));
+        $logger->info("hedonghong", ['sss'=>111]);
+    }
 
     public function testMysqlLogger()
     {
@@ -46,10 +46,12 @@ class LoggerTest extends TestCase
             'charset'       => 'utf8',
         ];
 
-        $mysql = new Logger(new MysqlStorage($config));
 
-        $mysql->info("hedonghong", ['ss'=>111]);
+
+//        $mysql = new Logger(new MysqlStorage($config));
+//
+//        $mysql->info("hedonghong", ['ss'=>111]);
     }
 }
 
-//( new LoggerTest )->testConfigLogger();
+( new LoggerTest )->testConfigLogger();

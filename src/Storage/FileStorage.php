@@ -8,6 +8,9 @@
 
 namespace Lhlog\Storage;
 
+use Lhlog\Models\LineLog;
+use Psr\Log\InvalidArgumentException;
+
 class FileStorage extends Base
 {
     /**
@@ -49,10 +52,10 @@ class FileStorage extends Base
     public function init(array $config)
     {
         parent::init( $config );
-        if( !array_key_exists( $this->cycle, self::CYCLE_TYPE_MAP ) ) throw new \Exception( 'Invalid `cycle` value '.$this->cycle );
+        if (!array_key_exists( $this->cycle, self::CYCLE_TYPE_MAP )) throw new InvalidArgumentException('Invalid `cycle` value '.$this->cycle);
 
         // 全路径
-        $this->logPath = $this->logPath.'/'.date( self::CYCLE_TYPE_MAP[ $this->cycle ] ).'_'.$this->logFileName;
+        $this->logPath = $this->logPath . DIRECTORY_SEPARATOR . date(self::CYCLE_TYPE_MAP[ $this->cycle ]) . '_' .$this->logFileName;
     }
 
     /**
@@ -66,15 +69,16 @@ class FileStorage extends Base
     {
         $this->logLevel = $level;
         // TODO: Implement process() method.
-        $t    = \DateTime::createFromFormat("U.u", microtime(true))->format('Y-m-d H:i:s.u');
-        $log = new \Lhlog\Models\Log(
-            $t. '  ' .$message,
-            empty($trace) ? "" : " file[{$trace['file']}]  line[{$trace['line']}]",
-            $level,
-            $context
-        );
+        $t   = \DateTime::createFromFormat("U.u", microtime(true))->format('Y-m-d H:i:s.u');
 
-        $this->write($log);
+        $log = new LineLog(
+            $message,
+            empty($trace) ? "" : "file[{$trace['file']}]  line[{$trace['line']}]",
+            $level,
+            empty($this->content) ? "" : json_encode($this->content),
+            $t
+        );
+        $this->write($log->format());
     }
 
     /**
@@ -87,7 +91,7 @@ class FileStorage extends Base
     public function write($log)
     {
         // TODO: Implement write() method.
-        return file_put_contents($this->logPath, json_encode( $log ), FILE_APPEND);
+        return file_put_contents($this->logPath, $log, FILE_APPEND);
     }
 
     /**
