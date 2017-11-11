@@ -30,6 +30,7 @@ class MysqlLog extends Log
         return [
             ":level"       => $this->level,
             ":location"    => $this->location,
+            ":message"     => $this->message,
             ":content"     => $this->content,
             ":create_time" => $this->create_time,
         ];
@@ -43,7 +44,7 @@ class MysqlLog extends Log
             $level  = addslashes($level);
             $where .= " AND `level`='{$level}'";
         }
-        $where .= " {$order} {$offset}, {$size}";
+        $where .= " {$order} limit {$offset}, {$size}";
         return "SELECT * FROM {$logTableName} WHERE" . $where;
     }
 }

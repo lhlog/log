@@ -47,9 +47,9 @@ class MysqlStorage extends Base
         $this->logLevel = $level;
         $logs = new MysqlLog(
             $message,
+            !empty($trace) ? "file[{$trace['file']}]" . " line[{$trace['line']}]" : "",
             $level,
             !empty($context) ? json_encode($context) : "",
-            !empty($trace) ? "file[{$trace['file']}]" . " line[{$trace['line']}]" : "",
             date('Y-m-d H:i:s')
         );
         $this->write($logs);
@@ -87,7 +87,7 @@ class MysqlStorage extends Base
      */
     public function write($logs)
     {
-        $pdo = self::$conn->prepare($logs->getWriteSql());
+        $pdo = self::$conn->prepare($logs->getWriteSql($this->logTableName));
         $pdo->execute($logs->getWriteData());
         return self::$conn->lastInsertId();
     }
@@ -101,8 +101,10 @@ class MysqlStorage extends Base
      */
     public function read($level='', $order='', $page=1, $size=100)
     {
-        $sql     = MysqlLog::getReadSql($this->logTableName, $level, $order, $page, $size);
-        $results = self::$conn->query($sql);
+        $sql = MysqlLog::getReadSql($this->logTableName, $level, $order, $page, $size);
+        $pdo = self::$conn->prepare($sql);
+        $pdo->execute();
+        $results = $pdo->fetchAll(\PDO::FETCH_ASSOC);
         return $results;
     }
 

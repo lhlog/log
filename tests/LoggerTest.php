@@ -48,20 +48,34 @@ class LoggerTest extends TestCase
 
 
 
-//        $mysql = new Logger(new MysqlStorage($config));
-//
-//        $mysql->info("hedonghong", ['ss'=>111]);
+        $mysql = new Logger(new MysqlStorage($config));
+
+        $mysql->warning("hedonghong3", ['ss'=>111]);
     }
 
     public function testRead()
     {
+//        $config = [
+//            'logPath'    => '.',
+//            'logFileName' => 'test.log',
+//            'cycle'   => FileStorage::CYCLE_DAY,
+//        ];
+//        $logger = new Logger(new FileStorage($config));
+//        $logger->listLogs(1, 1, 3, 3);
+
         $config = [
-            'logPath'    => '.',
-            'logFileName' => 'test.log',
-            'cycle'   => FileStorage::CYCLE_DAY,
+            'host'          => '127.0.0.1',
+            'userName'      => 'root',
+            'password'      => '',
+            'dbName'        => 'test',
+            'logTableName'  => 'example_table_log',
+            'charset'       => 'utf8',
         ];
-        $logger = new Logger(new FileStorage($config));
-        $logger->listLogs(1, 1, 3, 3);
+
+
+
+        $mysql = new Logger(new MysqlStorage($config));
+        $mysql->listLogs('info', 'order by create_time desc', 1, 2);
     }
 }
 
