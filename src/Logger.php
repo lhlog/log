@@ -163,4 +163,10 @@ class Logger implements LoggerInterface
         $trace = !empty($trace) ? $trace[1] : [];
         $this->storage->process($level, $trace, $message, $context);
     }
+
+    public function __destruct()
+    {
+        // TODO: Implement __destruct() method.
+        $this->storage->flushLogs();
+    }
 }
