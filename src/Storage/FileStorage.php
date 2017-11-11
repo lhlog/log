@@ -93,11 +93,10 @@ class FileStorage extends Base
         // TODO: Implement write() method.
         if ($this->useBuffer) {
             //缓存批量插入
-            if ($this->priorityQueue->count() > $this->bufferSize) {
+            if (count($this->queue) >= $this->bufferSize) {
                 $this->flushLogs();
-            } else {
-                $this->priorityQueue->insert($log, self::$priorityLevel[$this->logLevel]);
             }
+            $this->queue[] = $log;
         } else {
             //实时插入
             return file_put_contents($this->logPath, $log, FILE_APPEND);
@@ -166,6 +165,13 @@ class FileStorage extends Base
 
     public function flushLogs()
     {
-
+        if (count($this->queue)) {
+            $logs = '';
+            foreach ($this->queue as $log) {
+                $logs .= $log;
+            }
+            $this->queue = [];
+            return file_put_contents($this->logPath, $logs, FILE_APPEND);
+        }
     }
 }
