@@ -39,11 +39,21 @@ class LoggerTest extends TestCase
         $config = [
             'logPath'     => '.',
             'logFileName' => 'test.log',
-            'useBuffer'   => false,
+            'useBuffer'   => true,
+            'bufferSize'  => 2,
             'cycle'       => FileStorage::CYCLE_DAY, #hour 2017-11-21-14 #day 2017-11-21-xxx.log  #month 2017-11 #year 2017
         ];
         $logger = new Logger(new FileStorage($config));
-        $logger->info("hedonghong", ['sss'=>111]);
+        $logger->notice("hedonghong", ['sss'=>111]);
+        $logger->info("hedonghong3", ['sss'=>111]);
+        sleep(10);
+        $logger->notice("hedonghong4", ['sss'=>111]);
+        $logger->info("hedonghong1", ['sss'=>222]);
+        $logger->info("hedonghong2", ['sss'=>333]);
+        sleep(10);
+        $logger->alert("hedonghong2", ['sss'=>333]);
+        $logger->debug("hedonghong2", ['sss'=>333]);
+
     }
 
     public function testMysqlLogger()
