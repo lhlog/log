@@ -167,6 +167,6 @@ class Logger implements LoggerInterface
     public function __destruct()
     {
         // TODO: Implement __destruct() method.
-        $this->storage->flushLogs();
+        $this->storage && $this->storage->flushLogs();
     }
 }

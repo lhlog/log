@@ -30,8 +30,6 @@ class FileStorage extends Base
     public $logFileName = 'lhlog.log';
     // 保存的目录
     public $logPath     = '.' ;
-    // 级别
-    public $logLevel;
     // 周期
     public $cycle       = self::CYCLE_DAY;
 

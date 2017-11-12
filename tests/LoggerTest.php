@@ -12,6 +12,7 @@ require_once "../vendor/autoload.php";
 
 use Lhlog\Storage\FileStorage;
 use Lhlog\Storage\MysqlStorage;
+use Lhlog\Storage\RedisStorage;
 use PHPUnit\Framework\TestCase;
 use Lhlog\Logger;
 
@@ -87,6 +88,16 @@ class LoggerTest extends TestCase
         $mysql = new Logger(new MysqlStorage($config));
         $mysql->listLogs('info', 'order by create_time desc', 1, 2);
     }
+
+    public function testRedis(){
+        $log = new Logger( new RedisStorage( [
+            'callOnException' => function ( $e ){
+                print_r( $e );
+                exit;
+            }
+        ] ) );
+        $log->info( "info-log", [ 'd' => 2 ] );
+    }
 }
 
-( new LoggerTest )->testConfigLogger();
+( new LoggerTest )->testRedis();
