@@ -87,10 +87,18 @@ class MysqlStorage extends Base
      */
     public function write($mysqlLog)
     {
-        list($sql, $data) = $mysqlLog->getSingleSql($this->logTableName);
-        $pdo = self::$conn->prepare($sql);
-        $pdo->execute($data);
-        return self::$conn->lastInsertId();
+        if ($this->useBuffer) {
+            //缓存批量插入
+            if (count($this->queue) >= $this->bufferSize) {
+                $this->flushLogs();
+            }
+            $this->queue[] = $mysqlLog;
+        } else {
+            list($sql, $data) = $mysqlLog->getSingleSql($this->logTableName);
+            $pdo = self::$conn->prepare($sql);
+            $pdo->execute($data);
+            return self::$conn->lastInsertId();
+        }
     }
 
     /**
@@ -124,11 +132,11 @@ class MysqlStorage extends Base
     public function flushLogs()
     {
         if (count($this->queue)) {
-            $logs = '';
-            foreach ($this->queue as $log) {
-                $logs .= $log;
-            }
+            list($sql, $data) = MysqlLog::getBatchSql($this->logTableName, $this->queue);
+            $pdo = self::$conn->prepare($sql);
+            $pdo->execute($data);
             $this->queue = [];
+            return self::$conn->lastInsertId();
         }
     }
 }
