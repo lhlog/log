@@ -15,24 +15,24 @@ class MysqlLog extends Log
         parent::__construct($message, $location, $level, $content, $createTime);
     }
 
-    public function getWriteSql($logTableName)
+    public function getSingleSql($logTableName)
     {
         return
-        "
-          INSERT INTO {$logTableName} 
-          (`level`, location, message, content, create_time) 
-          VALUES (:level,:location,:message,:content,:create_time);
-        ";
-    }
-
-    public function getWriteData()
-    {
-        return [
-            ":level"       => $this->level,
-            ":location"    => $this->location,
-            ":message"     => $this->message,
-            ":content"     => $this->content,
-            ":create_time" => $this->create_time,
+        [
+            'sql' =>
+                "
+                  INSERT INTO {$logTableName} 
+                  (`level`, location, message, content, create_time) 
+                  VALUES (:level,:location,:message,:content,:create_time);
+                ",
+            'data' =>
+            [
+                ":level"       => $this->level,
+                ":location"    => $this->location,
+                ":message"     => $this->message,
+                ":content"     => $this->content,
+                ":create_time" => $this->create_time,
+            ]
         ];
     }
 

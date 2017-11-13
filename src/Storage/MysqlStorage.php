@@ -85,10 +85,11 @@ class MysqlStorage extends Base
      * @gts
      * @link
      */
-    public function write($logs)
+    public function write($mysqlLog)
     {
-        $pdo = self::$conn->prepare($logs->getWriteSql($this->logTableName));
-        $pdo->execute($logs->getWriteData());
+        list($sql, $data) = $mysqlLog->getSingleSql($this->logTableName);
+        $pdo = self::$conn->prepare($sql);
+        $pdo->execute($data);
         return self::$conn->lastInsertId();
     }
 
@@ -118,5 +119,16 @@ class MysqlStorage extends Base
     public function close()
     {
         // TODO: Implement close() method.
+    }
+
+    public function flushLogs()
+    {
+        if (count($this->queue)) {
+            $logs = '';
+            foreach ($this->queue as $log) {
+                $logs .= $log;
+            }
+            $this->queue = [];
+        }
     }
 }

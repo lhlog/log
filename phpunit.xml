@@ -1,0 +1,10 @@
+<phpunit
+        bootstrap="tests/bootstrap.php"
+        colors="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        convertErrorsToExceptions="true"
+        syntaxCheck="true"
+        verbose="true"
+>
+</phpunit>
