@@ -1,10 +1,12 @@
 <?php
-namespace Lhlog\Models;
 /**
- * construct
+ * @desc   日志信息模型父类
  * @author luoyuxiong
  * @datetime 2017-11-11T22:24:35+0800
-*/
+ */
+
+namespace Lhlog\Models;
+
 class Log
 {
     // 额外信息
@@ -19,7 +21,7 @@ class Log
     public $location;
 
     /**
-     * construct
+     * @desc   日志信息模型初始化方法
      * @author luoyuxiong
      * @datetime 2017-11-11T22:24:35+0800
      * @param    [type]                   $message    [日志信息]
@@ -30,10 +32,10 @@ class Log
      */
     public function __construct($message, $location, $level, $content = '', $createTime = null)
     {
-        $this->content = $content;
+        $this->content     = $content;
         $this->create_time = null === $createTime ? date( 'Y-m-d H:i:s' ) : $createTime;
-        $this->level = $level;
-        $this->message = $message;
-        $this->location = $location;
+        $this->level       = $level;
+        $this->message     = $message;
+        $this->location    = $location;
     }
 }

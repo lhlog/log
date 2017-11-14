@@ -108,7 +108,7 @@ class FileStorage extends Base
      * @gts
      * @link
      */
-    public function read($level=null, $order=1, $page=1, $size=100)
+    public function read($level=null, $order='ASC', $page=1, $size=100)
     {
         $logs  = [];
         if (file_exists($this->logPath)) {
@@ -120,7 +120,7 @@ class FileStorage extends Base
 //            $logs['order']      = $order;
 //            $logs['page']       = $page;
 //            $logs['size']       = $size;
-            if ($order === 1) {
+            if (strtoupper($order) === 'ASC') {
                 if ($totalPage >= $page) {
                     $startLine = ($page - 1) * $size;
                     $endLine   = $page * $size;
@@ -132,7 +132,7 @@ class FileStorage extends Base
                         $fp->next();
                     }
                 }
-            } elseif ($order === -1) {
+            } elseif (strtoupper($order) === 'DESC') {
                 if ($totalPage >= $page) {
                     $startLine = $totalLine - ($page * $size) + 1;
                     $startLine = $startLine < 0 ? 0 : $startLine;

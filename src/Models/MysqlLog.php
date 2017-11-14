@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2017/11/10
- * Time: 22:15
+ * @desc   MYSQL记录日志模型
+ * @author hedongong 2017-11-09 12:11
  */
 
 namespace Lhlog\Models;
@@ -15,6 +13,11 @@ class MysqlLog extends Log
         parent::__construct($message, $location, $level, $content, $createTime);
     }
 
+    /**
+     * @desc   单独记录日志格式化
+     * @param  $logTableName 表名
+     * @return array
+     */
     public function getSingleSql($logTableName)
     {
         return
@@ -34,6 +37,12 @@ class MysqlLog extends Log
         ];
     }
 
+    /**
+     * @desc  批量插入日志格式化
+     * @param $logTableName 表名
+     * @param $mysqlLogs    mysql模型数据
+     * @return array
+     */
     public static function getBatchSql($logTableName, $mysqlLogs)
     {
         $sql   = "INSERT INTO {$logTableName} (`level`, location, message, content, create_time) VALUES ";
@@ -50,6 +59,15 @@ class MysqlLog extends Log
         return [$sql, $data];
     }
 
+    /**
+     * @desc  日志读方法
+     * @param $logTableName 日志存储的表名
+     * @param string $level 要读取的日志级别
+     * @param $order        读取日志的排序
+     * @param $page         页数
+     * @param $size         每页总数
+     * @return string
+     */
     public static function getReadSql($logTableName, $level='', $order, $page, $size)
     {
         $offset = ($page - 1) * $size;
