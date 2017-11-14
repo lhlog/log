@@ -1,20 +1,7 @@
 <?php
 namespace Lhlog\Traits;
 
-use Psr\Log\LogLevel;
-
 trait Base {
-
-    protected static $priorityLevel = [
-        LogLevel::DEBUG     => 100,
-        LogLevel::INFO      => 200,
-        LogLevel::NOTICE    => 300,
-        LogLevel::WARNING   => 400,
-        LogLevel::ERROR     => 500,
-        LogLevel::CRITICAL  => 600,
-        LogLevel::ALERT     => 700,
-        LogLevel::EMERGENCY => 800,
-    ];
     /**
      * 根据传入的参数来初始化属性
      * @author luoyuxiong

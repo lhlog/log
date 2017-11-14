@@ -34,11 +34,6 @@ abstract class Base implements IStorage
     {
         $this->initProperty( $config );
     }
-    public function compare($priority1, $priority2)
-    {
-        if ($priority1 === $priority2) return 0;
-        return $priority1 < $priority2 ? -1 : 1;
-    }
 
     /**
      * 生成异常时的回调

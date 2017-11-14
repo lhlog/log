@@ -19,13 +19,11 @@ class MysqlLog extends Log
     {
         return
         [
-            'sql' =>
-                "
-                  INSERT INTO {$logTableName} 
-                  (`level`, location, message, content, create_time) 
-                  VALUES (:level,:location,:message,:content,:create_time);
-                ",
-            'data' =>
+            "
+              INSERT INTO {$logTableName} 
+              (`level`, location, message, content, create_time) 
+              VALUES (:level,:location,:message,:content,:create_time);
+            ",
             [
                 ":level"       => $this->level,
                 ":location"    => $this->location,
@@ -38,19 +36,18 @@ class MysqlLog extends Log
 
     public static function getBatchSql($logTableName, $mysqlLogs)
     {
-        $sql   = "INSERT INTO {$logTableName} VALUES ";
+        $sql   = "INSERT INTO {$logTableName} (`level`, location, message, content, create_time) VALUES ";
         $data  = [];
         foreach ($mysqlLogs as $key => $mysqlLog) {
-            $sql .= "(':level{$key}', ':location{$key}', ':message{$key}', ':content{$key}', ':create_time{$key}'),";
+            $sql .= "(:level{$key}, :location{$key}, :message{$key}, :content{$key}, :create_time{$key}),";
             $data[":level{$key}"]       = $mysqlLog->level;
             $data[":location{$key}"]    = $mysqlLog->location;
             $data[":message{$key}"]     = $mysqlLog->message;
             $data[":content{$key}"]     = $mysqlLog->content;
             $data[":create_time{$key}"] = $mysqlLog->create_time;
         }
-        $sql = ltrim($sql, ",") . ";";
-        return ['sql' => $sql, 'data' => $data];
-
+        $sql = rtrim($sql, ",") . ";";
+        return [$sql, $data];
     }
 
     public static function getReadSql($logTableName, $level='', $order, $page, $size)

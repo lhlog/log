@@ -133,6 +133,8 @@ class MysqlStorage extends Base
     {
         if (count($this->queue)) {
             list($sql, $data) = MysqlLog::getBatchSql($this->logTableName, $this->queue);
+//            print_r($sql);
+//            print_r($data);exit;
             $pdo = self::$conn->prepare($sql);
             $pdo->execute($data);
             $this->queue = [];
