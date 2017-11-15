@@ -15,7 +15,7 @@ class MysqlLog extends Log
 
     /**
      * @desc   单独记录日志格式化
-     * @param  $logTableName 表名
+     * @param  string $logTableName 表名
      * @return array
      */
     public function getSingleSql($logTableName)
@@ -38,9 +38,9 @@ class MysqlLog extends Log
     }
 
     /**
-     * @desc  批量插入日志格式化
-     * @param $logTableName 表名
-     * @param $mysqlLogs    mysql模型数据
+     * @desc   批量插入日志格式化
+     * @param  string $logTableName 表名
+     * @param  array $mysqlLogs    mysql模型数据
      * @return array
      */
     public static function getBatchSql($logTableName, $mysqlLogs)
@@ -61,11 +61,11 @@ class MysqlLog extends Log
 
     /**
      * @desc  日志读方法
-     * @param $logTableName 日志存储的表名
+     * @param string $logTableName 日志存储的表名
      * @param string $level 要读取的日志级别
-     * @param $order        读取日志的排序
-     * @param $page         页数
-     * @param $size         每页总数
+     * @param string $order 读取日志的排序
+     * @param int    $page         页数
+     * @param int    $size         每页总数
      * @return string
      */
     public static function getReadSql($logTableName, $level='', $order, $page, $size)

@@ -1,9 +1,7 @@
 <?php
 /**
- * @desc
+ * @desc   日志文件存储类
  * @author hedonghong 2017/11/10 9:06
- * @gts
- * @link
  */
 
 namespace Lhlog\Storage;
@@ -19,17 +17,22 @@ class FileStorage extends Base
      */
     // 月 2017-11-21-14
     const CYCLE_HOUR  = 'hour';
+
     // 天 017-11-21-xxx.log
     const CYCLE_DAY   = 'day';
+
     // 月 2017-11
     const CYCLE_MONTH = 'month';
+
     // 年 2017
     const CYCLE_YEAR  = 'year';
 
     // 日志名
     public $logFileName = 'lhlog.log';
+
     // 保存的目录
     public $logPath     = '.' ;
+
     // 周期
     public $cycle       = self::CYCLE_DAY;
 
@@ -42,11 +45,9 @@ class FileStorage extends Base
     ];
 
     /**
-     * @desc
+     * @desc  日志处理器初始化
+     * @param array $config
      * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
      */
     public function init(array $config)
     {
@@ -57,16 +58,16 @@ class FileStorage extends Base
     }
 
     /**
-     * @desc
+     * @desc  日志处理器调度方法
+     * @param string $level   日志等级
+     * @param array  $trace   日志记录发生位置
+     * @param string $message 日志消息
+     * @param array  $context 日志额外信息
      * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
      */
     public function process($level, $trace, $message, $context=array())
     {
         $this->logLevel = $level;
-        // TODO: Implement process() method.
         $t   = \DateTime::createFromFormat("U.u", microtime(true))->format('Y-m-d H:i:s.u');
 
         $log = new LineLog(
@@ -80,15 +81,12 @@ class FileStorage extends Base
     }
 
     /**
-     * @desc
+     * @desc  日志写入方法
+     * @param  LOG模型 $log
      * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
      */
     public function write($log)
     {
-        // TODO: Implement write() method.
         if ($this->useBuffer) {
             //缓存批量插入
             if (count($this->queue) >= $this->bufferSize) {
@@ -102,11 +100,8 @@ class FileStorage extends Base
     }
 
     /**
-     * @desc
-     * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
+     * @desc   简单的日志读取方法
+     * @return array
      */
     public function read($level=null, $order='ASC', $page=1, $size=100)
     {
@@ -150,17 +145,18 @@ class FileStorage extends Base
     }
 
     /**
-     * @desc
+     * @desc   收尾方法
      * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
      */
     public function close()
     {
         // TODO: Implement close() method.
     }
 
+    /**
+     * @desc   批次缓冲写入日志
+     * @return mixed
+     */
     public function flushLogs()
     {
         if (count($this->queue)) {

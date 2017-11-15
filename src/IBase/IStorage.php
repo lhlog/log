@@ -1,6 +1,6 @@
 <?php
 /**
- * @desc   日志接口
+ * @desc   日志存储接口
  * @author hedonghong 2017/11/10 8:56
  */
 

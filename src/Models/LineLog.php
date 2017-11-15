@@ -6,7 +6,6 @@
 
 namespace Lhlog\Models;
 
-
 class LineLog extends Log
 {
     public function __construct($message, $location, $level, $content, $createTime)

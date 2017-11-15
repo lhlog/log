@@ -1,9 +1,7 @@
 <?php
 /**
- * @desc
+ * @desc   mysql存储日志类
  * @author hedonghong 2017/11/10 16:33
- * @gts
- * @link
  */
 
 namespace Lhlog\Storage;
@@ -14,32 +12,36 @@ class MysqlStorage extends Base
 {
     use \Lhlog\Traits\Base;
 
+    //数据库地址，默认本地
     public $host     = '127.0.0.1';
 
+    //数据库用户名，默认root
     public $userName = 'root';
 
+    //数据库密码，默认为空
     public $password = '';
 
+    //数据库名称
     public $dbName;
 
+    //日志表名
     public $logTableName;
 
+    //数据库字符编码格式，默认utf-8
     public $charset = 'utf8';
 
+    //数据库链接句柄
     protected static $conn;
 
 
 
     /**
-     * @desc
-     * @param $level
-     * @param $trace
-     * @param $message
-     * @param $context
+     * @desc  日志处理器调度方法
+     * @param string $level   日志等级
+     * @param array  $trace   日志记录发生位置
+     * @param string $message 日志消息
+     * @param array  $context 日志额外信息
      * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
      */
     public function process($level, $trace, $message, $context)
     {
@@ -55,12 +57,9 @@ class MysqlStorage extends Base
     }
 
     /**
-     * @desc
+     * @desc  日志处理器初始化
      * @param array $config
      * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
      */
     public function init(Array $config)
     {
@@ -78,12 +77,9 @@ class MysqlStorage extends Base
     }
 
     /**
-     * @desc
-     * @param $log
+     * @desc  日志写入方法
+     * @param  LOG模型 $log
      * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
      */
     public function write($mysqlLog)
     {
@@ -102,11 +98,8 @@ class MysqlStorage extends Base
     }
 
     /**
-     * @desc
-     * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
+     * @desc   简单的日志读取方法
+     * @return array
      */
     public function read($level='', $order='', $page=1, $size=100)
     {
@@ -118,23 +111,22 @@ class MysqlStorage extends Base
     }
 
     /**
-     * @desc
+     * @desc   收尾方法
      * @return mixed
-     * @author hedonghong
-     * @gts
-     * @link
      */
     public function close()
     {
         // TODO: Implement close() method.
     }
 
+    /**
+     * @desc   批次缓冲写入日志
+     * @return mixed
+     */
     public function flushLogs()
     {
         if (count($this->queue)) {
             list($sql, $data) = MysqlLog::getBatchSql($this->logTableName, $this->queue);
-//            print_r($sql);
-//            print_r($data);exit;
             $pdo = self::$conn->prepare($sql);
             $pdo->execute($data);
             $this->queue = [];
