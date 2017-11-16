@@ -74,7 +74,7 @@ class RedisStorage extends Base
             $params = $log->buildHashParams();
             array_unshift($params, $name);
             // hash
-            call_user_func_array([ $tx, 'hset'], $params);
+            call_user_func_array([ $tx, 'hmset'], $params);
             // list
             $tx->rpush($me->generateListName(), $name);
         } );
