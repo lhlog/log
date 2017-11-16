@@ -23,4 +23,25 @@ class LoggerTest extends TestCase
         ] ) );
         $log->info( "info-log", [ 'd' => 2 ] );
     }
+
+    /**
+     * 读取
+     * @author luoyuxiong
+     * @datetime 2017-11-16T21:18:52+0800
+     * @return   [type]                   [description]
+     */
+    public function testRead(){
+        $s = new RedisStorage();
+        echo $s->getListCount();
+        // $list = $s->read( null, '', 1, 4 );
+        $list = $s->readByPage( 1, 4 );
+        print_r( $list );
+    }
+
+    private function ye(){
+        for( $i = 0; $i< 20; $i++ ){
+            yield $i;
+        }
+    }
+
 }

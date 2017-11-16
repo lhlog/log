@@ -29,4 +29,7 @@ class RedisLog extends Log
             'content' , $this->content,
         ];
     }
+
+    
+
 }

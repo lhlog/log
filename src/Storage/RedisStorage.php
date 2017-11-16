@@ -104,14 +104,47 @@ class RedisStorage extends Base
     }
 
     /**
+     * 返回列表的数量
+     * @author luoyuxiong
+     * @datetime 2017-11-16T21:16:17+0800
+     * @param    [type]                   $level [description]
+     * @return   [type]                          [description]
+     */
+    public function getListCount( $level = null ){
+        return static::$redis->llen( $this->generateListName() );
+    }
+
+    /**
      * @desc   简单的日志读取方法
      * @return array
      */
-    public function read($level, $order = '', $page = 1, $size = 100 )
+    public function read($level = null, $order = '', $page = 1, $size = 100 )
     {
-
+        if( $size <= 0 ) return [];
+        $start = ( $page - 1 ) * $size;
+        $keys = static::$redis->lrange(
+            $this->generateListName(),
+            $start,
+            $start + $size - 1
+        );
+        $list = [];
+        foreach( $keys as $k ){
+            $list[] = static::$redis->hgetall( $k );
+        }
+        return $list;
     }
 
+    /**
+     * 只是根据分页获取
+     * @author luoyuxiong
+     * @datetime 2017-11-16T21:35:31+0800
+     * @param    integer                  $page [当前页]
+     * @param    integer                  $size [每页的记录数]
+     * @return   [type]                         [description]
+     */
+    public function readByPage( $page = 1, $size = 100 ){
+        return $this->read( null, '', $page, $size );
+    }
 
     /**
      * @desc   收尾方法
