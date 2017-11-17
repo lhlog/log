@@ -65,15 +65,14 @@ class MysqlStorage extends Base
     {
         parent::init($config);
         $dsn = "mysql:dbname={$this->dbName};host={$this->host};charset={$this->charset}";
-        try{
+        try {
             if (empty(self::$conn)) {
                 self::$conn = new \PDO($dsn, $this->userName, $this->password);
             }
-        }catch( \Exception $e ){
-            $this->onException( $e );
+        } catch(\Exception $e) {
+            $this->onException($e);
             return false;
         }
-        
     }
 
     /**
